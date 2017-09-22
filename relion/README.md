@@ -79,6 +79,20 @@ about the sherlock setup for singularity:
  - importantly, the software under `/programs` is... there period! :)
  - `relion` is added to the path, at `/programs/x86_64-linux/system/sbgrid_bin/relion`
 
+### Exec
+The most common use case is executing a specific command to the image, and for this you
+want to use `exec`. For example, to list the content of programs in the image (from the host):
+
+```
+singularity exec $CONTAINER ls -1 /programs
+legacy.cshrc
+legacy.shrc
+sbgrid.cshrc
+sbgrid.shrc
+share
+x86_64-linux
+```
+
 ### Environment
 You can grep the environment to look at various versions, for example cuda:
 
@@ -100,6 +114,19 @@ To run a contained environment (not grabbing from the host):
 ```
 singularity exec --cleanenv $CONTAINER env
 ```
+
+
+### Job / Submission
+The best way to think of a Singularity image is like any other executable. So if you
+want to run a step of a pipeline using the image, you just run the image as a command,
+and no special binding is needed for Sherlock's standard storage spaces (eg, `/scratch`) because 
+they are bound automatically. So to submit with a batch job you generally want to:
+
+ - load the singularity module
+ - exec a command to the image - it's good practice to use full paths to executables in the rare case that there is an executable on the host found first.
+ - direct inputs / outputs to standard locations
+
+Essentially, the only thing that would change in a standard job submission file is to have the executable / command be performed by the image. 
 
 If you have any questions or issues, especially with library loading (this was development
 feature at time of 2.3.1) please post an issue at https://www.github.com/singularityware/singularity/issues
