@@ -2,6 +2,10 @@
 
 A relion image is on Sherlock for users with SBGrid accounts that need to use the software.
 You can use (or copy the image for more control / safekeeping) from the shared folder 
+
+```
+<coming soon!>
+```
 (we will add this path when Research Computing has discussed a good spot!)
 
 It is highly recommended to put singularity images on scratch, as they are large.
