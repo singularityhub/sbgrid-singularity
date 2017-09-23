@@ -1,11 +1,8 @@
 # Relion on Sherlock
 
 A relion image is on Sherlock for users with SBGrid accounts that need to use the software.
-You can use (or copy the image for more control / safekeeping) from the shared folder:
-
-```
-cp /scratch/users/vsochat/sbgrid_stanford-skiniotis--relion_20170921.img /scratch/users/<username>
-```
+You can use (or copy the image for more control / safekeeping) from the shared folder 
+(we will add this path when Research Computing has discussed a good spot!)
 
 It is highly recommended to put singularity images on scratch, as they are large.
 
