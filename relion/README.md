@@ -1,19 +1,60 @@
 # Relion on Sherlock
 
-A relion image is on Sherlock for users with SBGrid accounts that need to use the software.
-You can use (or copy the image for more control / safekeeping) from the shared folder 
+A relion image (`sbgrid_stanford-skiniotis--relion_20171026.img`) is on Sherlock for users with SBGrid accounts that need to use the software. You can use (or copy the image for more control / safekeeping) from the shared folder. The image comes with the following software installed:
 
 ```
-<coming soon!>
-```
-(we will add this path when Research Computing has discussed a good spot!)
+Installed packages:
 
-It is highly recommended to put singularity images on scratch, as they are large.
+ctf@20130307
+ctf@20140303
+ctf@20140609
+ctffind-4@4.0.15
+ctffind-4@4.0.16
+ctffind-4@4.0.17
+ctffind-4@4.1.5
+ctffind-4@4.1.8
+ctffind-4@4.1.8_intel16
+cuda@7.5
+cuda@8.0
+gctf@0.50
+gctf@1.06
+motioncor2@1.0.0
+motioncor2@20160822
+motioncor2@20161019
+motioncor2@20170130
+motioncorr@2.1
+relion@1.3
+relion@1.4
+relion@1.4b
+relion@1.4-randomphase3d
+relion@2.0.3_cu7.5
+relion@2.0.3_cu8.0
+relion@2.0.3_SP
+relion@2.0.4_cu7.5
+relion@2.0.4_cu8.0
+relion@2.0.6_cu7.5
+relion@2.0.6_cu8.0
+relion@2.1b1_cu7.5
+relion@2.1b1_cu8.0
+relion@2.1b1_SP
+relion@2.1-beta_cu7.5
+relion@2.1-beta_cu8.0
+resmap@1.1.4
+sbgrid-installer@1.0.660
+sbgrid-installer@latest
+summovie@1.0.2
+unblur@1.0_150529
+unblur@1.0.2
+```
+
+If you are moving this image from its provided location, it is highly recommended to put singularity images on scratch, as they are large. We are looking to create a smaller image size (of the format "squashfs") to help this a bit.
 
 ```
-du -h sbgrid_stanford-skiniotis--relion_20170921.img 
-6.6G	sbgrid_stanford-skiniotis--relion_20170921.img
+du -h sbgrid_stanford-skiniotis--relion_20171026.img 
+13G	sbgrid_stanford-skiniotis--relion_20171026.img
 ```
+
+Yes, fat.
 
 ## Interacting with the image
 
@@ -21,12 +62,11 @@ Whether you are on an interactive node or running a job, to interact with an ima
 you first need to load the Singularity software:
 
 ```
-module load singularity
 The following have been reloaded with a version change:
-  1) singularity/2.3 => singularity/2.3.1
+  1) singularity/2.3 => singularity/2.4
 ```
 
-The latest on sherlock is version 2.3.1, which should be sufficient to use the image. It's 
+You'll notice that Sherlock 2 is now supporting Singularity 2.4, hooray! It's 
 good practice, if you think you might forget, to add this to your bash profile so that it
 is automatically loaded and ready to go when you log in or run a job.
 
@@ -34,7 +74,7 @@ is automatically loaded and ready to go when you log in or run a job.
 The most basic "let me poke around" interactive mode is shell. You can shell inside your image:
 
 ```
-CONTAINER=/scratch/users/vsochat/share/sbgrid_stanford-skiniotis--relion_20170921.img
+CONTAINER=sbgrid_stanford-skiniotis--relion_20171026.img
 singularity shell $CONTAINER
 ```
 
@@ -62,23 +102,24 @@ Singularity: Invoking an interactive shell within container...
  Software used in the project was installed and configured by SBGrid.                   
  cite: eLife 2013;2:e01456, Collaboration gets the most out of software.                
 ********************************************************************************
- SBGrid installation last updated: 2017-09-07
+ SBGrid installation last updated: 2017-10-25
  Please submit bug reports and help requests to:       <bugs@sbgrid.org>  or
                                                        <http://sbgrid.org/bugs>
 ********************************************************************************
-
  Capsule Status: Active
        For additional information visit https://sbgrid.org/wiki/capsules
 ********************************************************************************
-Singularity sbgrid_stanford-skiniotis--relion_20170921.img:/scratch/users/vsochat/share> 
+Singularity sbgrid_stanford-skiniotis--relion_20171026.img:~> 
+
 ```
 
-If you ls where you shell, you will notice you are in the same directory as before! A few things
+If you `ls` where you shell, you will notice you are in the same directory as before! A few things
 about the sherlock setup for singularity:
 
- - `$PWD`,`/tmp`, `$HOME`, `/scratch`,`/local-scratch`, `/share`, and `oak` are automatically mounted. You shouldn't have trouble reading and writing data from the image via these mount (remember the image itself is read only)
- - importantly, the software under `/programs` is... there period! :)
+ - `$PWD`,`/tmp`, `$HOME`, `/scratch`,`/local-scratch`, `/share`, and `/oak` are automatically mounted. You shouldn't have trouble reading and writing data from the image via these mount (remember the image itself is read only)
+ - Importantly, the software under `/programs` is... there period! :)
  - `relion` is added to the path, at `/programs/x86_64-linux/system/sbgrid_bin/relion`
+
 
 ### Exec
 The most common use case is executing a specific command to the image, and for this you
@@ -98,7 +139,7 @@ x86_64-linux
 You can grep the environment to look at various versions, for example cuda:
 
 ```
-env | grep CUDA
+singularity exec $CONTAINER env | grep CUDA
 CUDA_X=8.0
 ```
 
@@ -116,6 +157,23 @@ To run a contained environment (not grabbing from the host):
 singularity exec --cleanenv $CONTAINER env
 ```
 
+### Relion
+Look at details for installation of relion
+
+```
+# (from inside the container, use exec to do from outside)
+sbgrid-info -L relion
+  Version information for: /programs/x86_64-linux/relion
+
+Default version:                    2.0.3_cu8.0
+In-use version:                     2.0.3_cu8.0
+Other available versions:           2.1b1_cu8.0 2.1b1_cu7.5 2.1-beta_cu8.0 2.1-beta_cu7.5 \ 
+Overrides use this shell variable:  RELION_X
+
+No program directory by that name found in /programs/i386-linux.
+No program directory by that name found in /programs/i386-mac.
+No program directory by that name found in /programs/powermac.
+```
 
 ### Job / Submission
 The best way to think of a Singularity image is like any other executable. So if you
